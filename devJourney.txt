@@ -1,0 +1,26 @@
+REDUX TOOLKIT
+1. create a basic react template, do npm i --save bootstrap and then add import 'bootstrap/dist/css/bootstrap.css'; to app.js
+2. create a store 
+export const store = configureStore({
+  reducer: {
+    
+  },
+});
+
+3. create a slice in features folder
+export const slice = createSlice({
+    name: "sliceName",
+    initialState,
+    reducers: {
+      updateSlice: (state, action) => {
+        state.value = (action.payload);
+      },
+    },
+  });
+  
+  export const { updateSlice } = slice.actions;
+  
+  export default slice.reducer;
+
+reducers are all the methdos available to modify and manipulate state
+add reducers to store
