@@ -1,6 +1,6 @@
 REDUX TOOLKIT
 1. create a basic react template, do npm i --save bootstrap and then add import 'bootstrap/dist/css/bootstrap.css'; to app.js
-2. create a store 
+2. create a store.js in a dir
 export const store = configureStore({
   reducer: {
     

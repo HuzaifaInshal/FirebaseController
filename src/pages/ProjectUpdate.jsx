@@ -1,5 +1,5 @@
 import React from 'react'
-import addDatatoDatabase from '../app/firebase/addData';
+import addDatatoDatabase from '../firebase/addData';
 import Form from '../components/Form';
 
 const ProjectUpdate = () => {
