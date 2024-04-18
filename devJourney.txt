@@ -24,3 +24,14 @@ export const slice = createSlice({
 
 reducers are all the methdos available to modify and manipulate state
 add reducers to store
+
+4. In order to get valueof current state
+import { useSelector } from "react-redux";
+const value = useSelector(
+    (state) => state.sliceName.value
+  );
+
+5. In order to call a state function
+import { useDispatch } from "react-redux";
+const dispatch = useDispatch()
+dispatch(updateSlice(data))

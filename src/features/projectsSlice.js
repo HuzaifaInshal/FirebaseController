@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = [];
 
 export const projectsSlice = createSlice({
-    name: "reservations",
+    name: "projects",
     initialState,
     reducers: {
       updateAll: (state, action) => {

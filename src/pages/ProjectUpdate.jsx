@@ -1,13 +1,7 @@
 import React from 'react'
-import addDatatoDatabase from '../firebase/addData';
 import Form from '../components/Form';
 
 const ProjectUpdate = () => {
-
-    const updateData = () => {
-        addDatatoDatabase()
-    }
-
     return (
         <>
             <div className="container">

@@ -22,7 +22,7 @@ const initialState = {
   };
 
 export const projectSlice = createSlice({
-    name: "reservations",
+    name: "project",
     initialState,
     reducers: {
       updateProject: (state, action) => {

@@ -5,6 +5,7 @@ import addFileToStorage from '../firebase/addFile';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import getImageURL from '../firebase/getImage';
+import addDatatoDatabase from '../firebase/addData';
 
 const Form = () => {
     const [formData, SetFormData] = useState(
@@ -85,6 +86,8 @@ const Form = () => {
     function handleSubmit(e) {
         e.preventDefault()
         console.log(formData);
+        addDatatoDatabase(formData,`projects/${formData.orderId}`)
+        toast('Submitted with Success')
     }
 
 
