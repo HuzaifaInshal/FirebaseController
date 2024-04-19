@@ -1,11 +1,10 @@
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
-import ProjectUpdate from './pages/ProjectUpdate';
-
+import Routes from './Routes';
 function App() {
   return (
     <div className="App">
-      <ProjectUpdate />
+      <Routes/>
     </div>
   );
 }

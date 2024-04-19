@@ -13,7 +13,7 @@ export const slice = createSlice({
     initialState,
     reducers: {
       updateSlice: (state, action) => {
-        state.value = (action.payload);
+        state = (action.payload);
       },
     },
   });
@@ -28,7 +28,7 @@ add reducers to store
 4. In order to get valueof current state
 import { useSelector } from "react-redux";
 const value = useSelector(
-    (state) => state.sliceName.value
+    (state) => state.sliceName
   );
 
 5. In order to call a state function

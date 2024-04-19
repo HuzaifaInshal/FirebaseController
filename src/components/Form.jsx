@@ -6,18 +6,19 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import getImageURL from '../firebase/getImage';
 import addDatatoDatabase from '../firebase/addData';
+import { useParams } from 'react-router-dom';
 
 const Form = () => {
+    const { id } = useParams();
     const [formData, SetFormData] = useState(
         {
-            id: 0,
-            orderId: 0,
+            id: id,
             type: {
                 major: '',
                 minor: ''
             },
-            title: 'title',
-            tagLine: 'blah',
+            title: '',
+            tagLine: '',
             majorHashtags: [''],
             minorHashtags: [''],
             gitLinks: [''],
@@ -57,10 +58,6 @@ const Form = () => {
         }
     }, [quill]);
 
-    function exportHTMLContents() {
-        const html = quill.root.innerHTML;
-        return html;
-    }
 
     function insertExternalImage(url) {
         const index = quill.getSelection(true).index;
@@ -86,7 +83,7 @@ const Form = () => {
     function handleSubmit(e) {
         e.preventDefault()
         console.log(formData);
-        addDatatoDatabase(formData,`projects/${formData.orderId}`)
+        addDatatoDatabase(formData,`projects/${formData.id}`)
         toast('Submitted with Success')
     }
 
@@ -142,6 +139,16 @@ const Form = () => {
     return (
         <form onSubmit={handleSubmit}>
             <ToastContainer />
+
+            <div className="mb-3">
+                <label htmlFor="id" className="form-label">ID</label>
+                <input type="text" className="form-control" name='id' value={formData.id}/>
+            </div>
+
+            <div className="mb-3">
+                <label htmlFor="orderPriority" className="form-label">Priority</label>
+                <input type="text" className="form-control" name='orderPriority' onChange={(e) => handleChange(e)} />
+            </div>
 
             <div className="mb-3">
                 <label htmlFor="title" className="form-label">Title</label>

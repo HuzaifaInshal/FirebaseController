@@ -6,15 +6,12 @@ export const projectsSlice = createSlice({
     name: "projects",
     initialState,
     reducers: {
-      updateAll: (state, action) => {
-        state.value = (action.payload);
-      },
-      push:(state,action) =>{
-        state.value.push = (action.payload);
+      pushData:(state,action) =>{
+        state.push(action.payload);
       }
     },
   });
   
-  export const { updateAll ,push} = projectsSlice.actions;
+  export const { pushData} = projectsSlice.actions;
   
   export default projectsSlice.reducer;
