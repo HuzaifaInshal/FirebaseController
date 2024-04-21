@@ -5,8 +5,9 @@ import addDatatoDatabase from '../firebase/addData';
 const DispComp = () => {
     const [data, setData] = useState( {    
         skills: '',
-        workExperience: [['', '', '']],
-        education: [['', '', '', '']]
+        workExperience: [['', '', '','']],
+        education: [['', '', '', '']],
+        certifications:['']
     })
     useEffect(()=>{
         async function fetchData() {
@@ -17,7 +18,6 @@ const DispComp = () => {
         fetchData()
     },[]);
 
-    useEffect(()=>{console.log(data);},[data])
 
     function handleSubmit(e) {
         e.preventDefault()
@@ -35,11 +35,20 @@ const DispComp = () => {
 
     function addNew(e){
         if(e.target.name == 'workExperience'){
-            setData({...data,workExperience:[...data.workExperience,['','','']]})
+            setData({...data,workExperience:[...data.workExperience,['','','','']]})
         }
         if(e.target.name == 'education'){
             setData({...data,education:[...data.education,['','','','']]})
         }
+        if(e.target.name == 'certifications'){
+            setData({...data,certifications:[...data.certifications,'']})
+        }
+    }
+
+    function handleChange2(e,index){
+        const newarray = data.certifications;
+        newarray[index] = e.target.value;
+        setData({...data,certifications:newarray})
     }
     return (
         <>
@@ -50,13 +59,14 @@ const DispComp = () => {
                 <hr />
                 <div className="d-flex align-items-center">
                     <h2>Work Experience</h2>
-                    <button className="btn btn-primary ms-3" name='workExperience' onClick={(e)=>addNew(e)}>Add Experience</button>
+                    <button type='button' className="btn btn-primary ms-3" name='workExperience' onClick={(e)=>addNew(e)}>Add Experience</button>
                 </div>
                 <table>
                     <thead>
                         <tr>
                             <th>Duration</th>
                             <th>Title</th>
+                            <th>Place</th>
                             <th>Special Notes</th>
                         </tr>
                     </thead>
@@ -66,6 +76,7 @@ const DispComp = () => {
                                 <td><input type="text" name='workExperience' value={each[0]} onChange={(e) => { handleChange(e, index, 0) }} /></td>
                                 <td><input type="text" name='workExperience' value={each[1]} onChange={(e) => { handleChange(e, index, 1) }} /></td>
                                 <td><input type="text" name='workExperience' value={each[2]} onChange={(e) => { handleChange(e, index, 2) }} /></td>
+                                <td><input type="text" name='workExperience' value={each[3]} onChange={(e) => { handleChange(e, index, 3) }} /></td>
                             </tr>
                         ))}
                     </tbody>
@@ -73,7 +84,7 @@ const DispComp = () => {
                 <hr />
                 <div className="d-flex align-items-center">
                     <h2>Education</h2>
-                    <button className="btn btn-primary ms-3" name='education' onClick={(e)=>addNew(e)}>Add Education</button>
+                    <button type='button' className="btn btn-primary ms-3" name='education' onClick={(e)=>addNew(e)}>Add Education</button>
                 </div>
                 <table>
                     <thead>
@@ -95,7 +106,20 @@ const DispComp = () => {
                         ))}
                     </tbody>
                 </table>
-                <button type='submit' className='btn btn-primary'>Submit</button>
+                <hr />
+                <div>
+                <div className="d-flex align-items-center">
+                    <h2>Certifications</h2>
+                    <button type='button' className="btn btn-primary ms-3" name='certifications' onClick={(e)=>addNew(e)}>Add Education</button>
+                </div>
+                    {data.certifications.map((each,index)=>(
+                        <div>
+                            <input type="text" value={data.certifications[index]} onChange={(e)=>handleChange2(e,index)}/>
+                        </div>
+                    ))}
+                    </div>
+                <hr />
+                <button  type='submit' className='btn btn-primary'>Submit</button>
             </form>
         </>
     )
