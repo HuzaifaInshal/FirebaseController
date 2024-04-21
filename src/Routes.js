@@ -14,10 +14,10 @@ const Routez = () => {
   return (
     <Router>
         <Routes>
-            <Route path='/' element={<Login/>}/>
+            {/* <Route path='/' element={<Login/>}/> */}
             <Route path='/project/:id' element={<ProjectUpdate/>}/>
             <Route path='/display' element={<Display/>}/>
-            <Route path='/main' element={<Main/>}/>
+            <Route path='/' element={<Main/>}/>
             <Route path='/resume' element={<Resume/>}/>
         </Routes>
     </Router>
