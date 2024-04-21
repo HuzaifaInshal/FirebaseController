@@ -8,10 +8,13 @@ export const projectsSlice = createSlice({
     reducers: {
       pushData:(state,action) =>{
         state.push(action.payload);
+      },
+      emptyData:(state,action)=>{
+        state.splice(0,state.length)
       }
     },
   });
   
-  export const { pushData} = projectsSlice.actions;
+  export const { pushData,emptyData} = projectsSlice.actions;
   
   export default projectsSlice.reducer;

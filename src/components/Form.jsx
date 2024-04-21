@@ -7,47 +7,35 @@ import 'react-toastify/dist/ReactToastify.css';
 import getImageURL from '../firebase/getImage';
 import addDatatoDatabase from '../firebase/addData';
 import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Form = () => {
     const { id } = useParams();
-    const [formData, SetFormData] = useState(
-        {
-            id: id,
-            type: {
-                major: '',
-                minor: ''
-            },
-            title: '',
-            tagLine: '',
-            majorHashtags: [''],
-            minorHashtags: [''],
-            gitLinks: [''],
-            liveLinks: [''],
-            mainPara: '',
-            titlePictureURL: '',
-            mp4URL: '',
-            blogFlow: '',
-        }
-    );
+    const dataFromState = useSelector(state => state.project)
+    const [major, setMajor] = useState('work')
+    const [formData, SetFormData] = useState(dataFromState);
+    if (formData.id == 0) {
+        SetFormData({ ...formData, ['id']: id })
+    }
     const [busy, setBusy] = useState(false)
 
     // QUILL
     const modules = {
         toolbar: [
-          ['bold', 'italic', 'underline', 'strike',{'list': 'ordered'}, { 'list': 'bullet' },'link', 'blockquote', 'code-block',
-          { 'header': 1 }, { 'header': 2 }],[{ 'script': 'sub'}, { 'script': 'super' }],
-          [{ 'indent': '-1'}, { 'indent': '+1' }],
-          [{ 'direction': 'rtl' }],
-          [{ 'size': ['small', false, 'large', 'huge'] }],
-          [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-          [{ 'color': [] }, { 'background': [] }],
-          [{ 'font': [] }],
-          [{ 'align': [] }],
-          ['clean']
+            ['bold', 'italic', 'underline', 'strike', { 'list': 'ordered' }, { 'list': 'bullet' }, 'link', 'blockquote', 'code-block',
+                { 'header': 1 }, { 'header': 2 }], [{ 'script': 'sub' }, { 'script': 'super' }],
+            [{ 'indent': '-1' }, { 'indent': '+1' }],
+            [{ 'direction': 'rtl' }],
+            [{ 'size': ['small', false, 'large', 'huge'] }],
+            [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+            [{ 'color': [] }, { 'background': [] }],
+            [{ 'font': [] }],
+            [{ 'align': [] }],
+            ['clean']
         ],
-      };
-    
-    const { quill, quillRef } = useQuill({modules});
+    };
+
+    const { quill, quillRef } = useQuill({ modules });
 
     useEffect(() => {
         if (quill) {
@@ -55,6 +43,12 @@ const Form = () => {
                 const html = quill.root.innerHTML;
                 SetFormData(prevState => ({ ...prevState, blogFlow: html }));
             });
+        }
+    }, [quill]);
+
+    useEffect(() => {
+        if (quill) {
+            quill.root.innerHTML = formData.blogFlow;
         }
     }, [quill]);
 
@@ -70,20 +64,25 @@ const Form = () => {
     }
 
     function handleArrayChange(str, index, e) {
-        const newArray = formData[str];
+        const newArray = [...formData[str]];
         newArray[index] = e.target.value;
-        SetFormData({ ...formData, [str]: newArray })
+        SetFormData({ ...formData, [str]: newArray });
     }
-    
+
     function handleChange(e) {
         SetFormData({ ...formData, [e.target.name]: `${e.target.value}` })
+    }
+
+    function handleDropDownChange(e) {
+        setMajor(e.target.value)
+        SetFormData({ ...formData, ['type']: { ...formData.type, [e.target.name]: `${e.target.value}` } })
     }
 
     // SUBMIT FUNCTIONALITY
     function handleSubmit(e) {
         e.preventDefault()
         console.log(formData);
-        addDatatoDatabase(formData,`projects/${formData.id}`)
+        addDatatoDatabase(formData, `projects/${formData.id}`)
         toast('Submitted with Success')
     }
 
@@ -111,7 +110,7 @@ const Form = () => {
         }
     }
 
-    async function addImageTOBlog(e){
+    async function addImageTOBlog(e) {
         const str = e.target.name;
         setBusy(true);
         const id = toast.loading("File Uploading....")
@@ -142,34 +141,60 @@ const Form = () => {
 
             <div className="mb-3">
                 <label htmlFor="id" className="form-label">ID</label>
-                <input type="text" className="form-control" name='id' value={formData.id}/>
+                <input type="text" className="form-control" name='id' disabled={true} value={formData.id} />
             </div>
 
             <div className="mb-3">
-                <label htmlFor="orderPriority" className="form-label">Priority</label>
-                <input type="text" className="form-control" name='orderPriority' onChange={(e) => handleChange(e)} />
+                <label htmlFor="major">Major Type</label>
+                <select class="form-select" aria-label="Default select example" name='major'
+                    onChange={(e) => handleDropDownChange(e)}>
+                    <option value='work' selected>Work</option>
+                    <option value="lab">Lab</option>
+                </select>
+            </div>
+
+            <div className="mb-3">
+                <label htmlFor="minor">Minor Type</label>
+                <select class="form-select" aria-label="Default select example" name='minor'
+                    onChange={(e) => handleDropDownChange(e)}>
+                    {major == 'work' ?
+                        <>
+                            <option value="web" selected>Web</option>
+                            <option value="threed">3D</option>
+                            <option value="game">Game</option>
+                            <option value="mobile">Mobile</option>
+                            <option value="uiux">UIUX</option>
+                        </> :
+                        <>
+                            <option value="static" selected>Static webs</option>
+                            <option value="dashboards">Data Dashboards</option>
+                            <option value="jupyter">Jupyter Snaps</option>
+                            <option value="codepens">Codepens</option>
+                            <option value="other">Other</option>
+                        </>}
+                </select>
             </div>
 
             <div className="mb-3">
                 <label htmlFor="title" className="form-label">Title</label>
-                <input type="text" className="form-control" name='title' onChange={(e) => handleChange(e)} />
+                <input type="text" value={formData.title} className="form-control" name='title' onChange={(e) => handleChange(e)} />
             </div>
 
             <div className="mb-3">
                 <label htmlFor="tagLine" className="form-label">Tag Line</label>
-                <input type="text" className="form-control" name='tagLine' />
+                <input type="text" value={formData.tagLine} className="form-control" name='tagLine' onChange={(e) => handleChange(e)} />
             </div>
 
             <div className="mb-3">
                 <label htmlFor="mainPara" className="form-label">Main Para</label>
-                <input type="text" className="form-control" name='mainPara' />
+                <input type="text" value={formData.mainPara} className="form-control" name='mainPara' onChange={(e) => handleChange(e)} />
             </div>
 
             <div className="mb-3 border-0">
                 <label>Major Hashtags</label>
                 <button className="btn btn-primary ms-2" onClick={() => addField('majorHashtags')} type='button'>Add</button>
                 {formData.majorHashtags.map((element, index) => (
-                    <input key={index} type="text" className="form-control" onChange={(e) => handleArrayChange('majorHashtags', index, e)} />
+                    <input key={index} value={formData.majorHashtags[index]} type="text" className="form-control" onChange={(e) => handleArrayChange('majorHashtags', index, e)} />
                 ))}
             </div>
 
@@ -177,7 +202,7 @@ const Form = () => {
                 <label>Minor Hashtags</label>
                 <button className="btn btn-primary ms-2" onClick={() => addField('minorHashtags')} type='button'>Add</button>
                 {formData.minorHashtags.map((element, index) => (
-                    <input key={index} type="text" className="form-control" name={`minorHashtags${index}`} onChange={(e) => handleArrayChange('minorHashtags', index, e)} />
+                    <input key={index} type="text" value={formData.minorHashtags[index]} className="form-control" name={`minorHashtags${index}`} onChange={(e) => handleArrayChange('minorHashtags', index, e)} />
                 ))}
             </div>
 
@@ -185,7 +210,7 @@ const Form = () => {
                 <label>Git Links</label>
                 <button className="btn btn-primary ms-2" onClick={() => addField('gitLinks')} type='button'>Add</button>
                 {formData.gitLinks.map((element, index) => (
-                    <input key={index} type="text" className="form-control" onChange={(e) => handleArrayChange('gitLinks', index, e)} />
+                    <input key={index} type="text" value={formData.gitLinks[index]} className="form-control" onChange={(e) => handleArrayChange('gitLinks', index, e)} />
                 ))}
             </div>
 
@@ -193,27 +218,28 @@ const Form = () => {
                 <label>Live Links</label>
                 <button className="btn btn-primary ms-2" onClick={() => addField('liveLinks')} type='button'>Add</button>
                 {formData.liveLinks.map((element, index) => (
-                    <input key={index} type="text" className="form-control" onChange={(e) => handleArrayChange('liveLinks', index, e)} />
+                    <input key={index} type="text" value={formData.liveLinks[index]} className="form-control" onChange={(e) => handleArrayChange('liveLinks', index, e)} />
                 ))}
             </div>
 
             <div className="mb-3">
                 <label htmlFor="titlePictureURL" className="form-label">Thumbnail Picture</label>
-                <input type="file" className="form-control" name='titlePictureURL' onChange={(e) => handleImage(e)} accept=".jpg, .jpeg, .png" multiple={false}/>
+                <img src={formData.titlePictureURL} alt="None" width={150} />
+                <input type="file" className="form-control" name='titlePictureURL' onChange={(e) => handleImage(e)} accept=".jpg, .jpeg, .png" multiple={false} />
             </div>
 
             <div className="mb-3">
                 <label htmlFor="mp4URL" className="form-label">MP4 Video</label>
-                <input type="file" className="form-control" name='mp4URL' onChange={(e) => handleImage(e)} accept=".mp4" multiple={false}/>
+                <img src={formData.mp4URL} alt="None" width={150} />
+                <input type="file" className="form-control" name='mp4URL' onChange={(e) => handleImage(e)} accept=".mp4" multiple={false} />
             </div>
 
             <div className="mb-3">
                 <label className="form-label">Blog</label>
                 <div>
                     <label htmlFor="blogImg"></label>
-                    <input type="file" name='blogImg' onChange={(e)=>addImageTOBlog(e)} accept=".jpg, .jpeg, .png" multiple={false}/>
+                    <input type="file" name='blogImg' onChange={(e) => addImageTOBlog(e)} accept=".jpg, .jpeg, .png" multiple={false} />
 
-                    {/* <div contentEditable className='border border-primary p-2 d-flex flex-column align-items-center' ref={blogRef}></div> */}
                     <div>
                         <div ref={quillRef}></div>
                     </div>
