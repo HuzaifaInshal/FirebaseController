@@ -16,6 +16,7 @@ const initialState = {
     titlePictureURL: '',
     mp4URL: '',
     blogFlow: '',
+    isActive:true
 };
 
 export const projectSlice = createSlice({
