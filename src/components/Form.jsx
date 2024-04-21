@@ -78,6 +78,12 @@ const Form = () => {
         SetFormData({ ...formData, ['type']: { ...formData.type, [e.target.name]: `${e.target.value}` } })
     }
 
+    function handleDelete(e,index){
+        const newArray = [...formData[e.target.name]];
+        newArray.splice(index,1)
+        SetFormData({ ...formData, [e.target.name]: newArray });
+    }
+
     // SUBMIT FUNCTIONALITY
     function handleSubmit(e) {
         e.preventDefault()
@@ -194,7 +200,10 @@ const Form = () => {
                 <label>Major Hashtags</label>
                 <button className="btn btn-primary ms-2" onClick={() => addField('majorHashtags')} type='button'>Add</button>
                 {formData.majorHashtags.map((element, index) => (
-                    <input key={index} value={formData.majorHashtags[index]} type="text" className="form-control" onChange={(e) => handleArrayChange('majorHashtags', index, e)} />
+                    <div key={index} className='d-flex align-items-center'>
+                    <input value={formData.majorHashtags[index]} type="text" className="form-control" onChange={(e) => handleArrayChange('majorHashtags', index, e)} />
+                    <button className="btn btn-danger ms-2" type='button' name='majorHashtags' onClick={(e)=>handleDelete(e,index)}>Delete</button>
+                    </div>
                 ))}
             </div>
 
@@ -202,7 +211,10 @@ const Form = () => {
                 <label>Minor Hashtags</label>
                 <button className="btn btn-primary ms-2" onClick={() => addField('minorHashtags')} type='button'>Add</button>
                 {formData.minorHashtags.map((element, index) => (
+                    <div key={index} className='d-flex align-items-center'>
                     <input key={index} type="text" value={formData.minorHashtags[index]} className="form-control" name={`minorHashtags${index}`} onChange={(e) => handleArrayChange('minorHashtags', index, e)} />
+                    <button className="btn btn-danger ms-2" type='button' name='minorHashtags' onClick={(e)=>handleDelete(e,index)}>Delete</button>
+                    </div>
                 ))}
             </div>
 
@@ -210,7 +222,10 @@ const Form = () => {
                 <label>Git Links</label>
                 <button className="btn btn-primary ms-2" onClick={() => addField('gitLinks')} type='button'>Add</button>
                 {formData.gitLinks.map((element, index) => (
+                    <div key={index} className='d-flex align-items-center'>
                     <input key={index} type="text" value={formData.gitLinks[index]} className="form-control" onChange={(e) => handleArrayChange('gitLinks', index, e)} />
+                    <button className="btn btn-danger ms-2" type='button' name='gitLinks' onClick={(e)=>handleDelete(e,index)}>Delete</button>
+                    </div>
                 ))}
             </div>
 
@@ -218,7 +233,10 @@ const Form = () => {
                 <label>Live Links</label>
                 <button className="btn btn-primary ms-2" onClick={() => addField('liveLinks')} type='button'>Add</button>
                 {formData.liveLinks.map((element, index) => (
+                    <div key={index} className='d-flex align-items-center'>
                     <input key={index} type="text" value={formData.liveLinks[index]} className="form-control" onChange={(e) => handleArrayChange('liveLinks', index, e)} />
+                    <button className="btn btn-danger ms-2" type='button' name='liveLinks' onClick={(e)=>handleDelete(e,index)}>Delete</button>
+                    </div>
                 ))}
             </div>
 
