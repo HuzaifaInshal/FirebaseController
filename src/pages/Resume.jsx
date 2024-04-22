@@ -32,7 +32,7 @@ const Resume = () => {
     function handleSubmit(e) {
         e.preventDefault()
         console.log(data);
-        addDatatoDatabase(data, 'Huzaifa Resume')
+        addDatatoDatabase(data, 'HuzaifaResume')
         toast('Submitted with Success')
     }
 

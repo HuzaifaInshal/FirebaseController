@@ -74,9 +74,9 @@ const Form = () => {
     }
 
     function handleDropDownChange(e) {
-        setMajor(e.target.value)
         SetFormData({ ...formData, ['type']: { ...formData.type, [e.target.name]: `${e.target.value}` } })
     }
+
 
     function handleDelete(e,index){
         const newArray = [...formData[e.target.name]];
@@ -163,7 +163,7 @@ const Form = () => {
                 <label htmlFor="minor">Minor Type</label>
                 <select class="form-select" aria-label="Default select example" name='minor'
                     onChange={(e) => handleDropDownChange(e)}>
-                    {major == 'work' ?
+                    {formData.type.major == 'work' ?
                         <>
                             <option value="web" selected>Web</option>
                             <option value="threed">3D</option>
