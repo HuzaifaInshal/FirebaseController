@@ -1,7 +1,7 @@
 import { initializeApp } from "firebase/app";
-import {firebase} from './cred'
+import config from './cred.json';
 
-const firebaseConfig = firebase;
+const firebaseConfig = config;
 
 
 const frebaseAPP = initializeApp(firebaseConfig);
