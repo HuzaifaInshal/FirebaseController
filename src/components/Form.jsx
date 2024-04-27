@@ -12,12 +12,30 @@ import { useSelector } from 'react-redux';
 const Form = () => {
     const { id } = useParams();
     const dataFromState = useSelector(state => state.project)
-    const [major, setMajor] = useState('work')
     const [formData, SetFormData] = useState(dataFromState);
-    if (formData.id == 0) {
-        SetFormData({ ...formData, ['id']: id })
-    }
+    useEffect(() => {
+        // Update formData only if id is 0
+        if (formData.id === 0) {
+            SetFormData({ ...formData, id: id });
+        }
+    
+        // Update formData only if type.major is empty
+        if (formData.type.major === '') {
+            SetFormData({ ...formData, 
+                type: { 
+                    ...formData.type, 
+                    major: 'work', 
+                    minor: 'web' 
+                } 
+            });
+        }
+    }, [id, formData]);
+    
     const [busy, setBusy] = useState(false)
+
+    useEffect(()=>{
+        console.log(formData);
+    },[formData])
 
     // QUILL
     const modules = {
@@ -153,7 +171,7 @@ const Form = () => {
             <div className="mb-3">
                 <label htmlFor="major">Major Type</label>
                 <select class="form-select" aria-label="Default select example" name='major'
-                    onChange={(e) => handleDropDownChange(e)}>
+                    onChange={(e) => handleDropDownChange(e)} value={formData.type.major}>
                     <option value='work' selected>Work</option>
                     <option value="lab">Lab</option>
                 </select>
@@ -162,17 +180,17 @@ const Form = () => {
             <div className="mb-3">
                 <label htmlFor="minor">Minor Type</label>
                 <select class="form-select" aria-label="Default select example" name='minor'
-                    onChange={(e) => handleDropDownChange(e)}>
+                    onChange={(e) => handleDropDownChange(e)} value={formData.type.minor}>
                     {formData.type.major == 'work' ?
                         <>
-                            <option value="web" selected>Web</option>
+                            <option value="web">Web</option>
                             <option value="threed">3D</option>
                             <option value="game">Game</option>
                             <option value="mobile">Mobile</option>
                             <option value="uiux">UIUX</option>
                         </> :
                         <>
-                            <option value="static" selected>Static webs</option>
+                            <option value="static">Static webs</option>
                             <option value="dashboards">Data Dashboards</option>
                             <option value="jupyter">Jupyter Snaps</option>
                             <option value="codepens">Codepens</option>
