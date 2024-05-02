@@ -1,0 +1,3 @@
+@echo off
+echo Running some commands...
+npm start

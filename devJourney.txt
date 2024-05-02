@@ -1,4 +1,6 @@
-REDUX TOOLKIT
+=============================================================
+=================== REDUX TOOLKIT ===========================
+=============================================================
 1. create a basic react template, do npm i --save bootstrap and then add import 'bootstrap/dist/css/bootstrap.css'; to app.js
 2. create a store.js in a dir
 export const store = configureStore({
@@ -32,6 +34,91 @@ const value = useSelector(
   );
 
 5. In order to call a state function
+import { useDispatch } from "react-redux";
+const dispatch = useDispatch()
+dispatch(updateSlice(data))
+
+
+
+=============================================================
+================ REDUX ONLY =================================
+=============================================================
+
+1.create a store.js
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk"
+import reducers from "./reducers"
+
+export const store = createStore(
+    reducers:{},
+    {},
+    applyMiddleware(thunk)
+)
+
+2.In folder of reducers create index.js(this is optional if you have more than one  reducer)
+import { combineReducers } from "redux";
+import defReducer1 from "./defReducer1"
+const reducers = combineReducers({
+    reducer1:defReducer1
+})
+export default reducers
+
+3.Define all the reducers for above in reducer files.js
+const initialState = 0;
+const defReducer1 = (
+    state = initialState,
+    action
+) => {
+    switch (action.type) {
+        case "do1":
+            return ;
+        case "do2":
+            return ;
+        default:
+            return state
+    }
+}
+
+export default defReducer1;
+
+4.create action creater to dispatch actions (optional can directly call from component)
+export const action1 = (state) => {
+    return (dispatch) => {
+        dispatch({
+            type: "do1",
+            payload: state
+        });
+    }
+}
+export const action2 = (state) => {
+    return (dispatch) => {
+        dispatch({
+            type: "do2",
+            payload: state
+        });
+    }
+}
+
+5. In order to call the state value we`ll use
+import { useSelector } from "react-redux"
+const state = useSelector((state) => state.bank);
+
+6.
+create state/index.js
+export * from "./store"
+export * as actionCreators from "./action-creator/index"
+In order to call any action use
+import { useDispatch } from "react-redux";
+import { bindActionCreators } from 'redux'
+import {actionCreators} from "./state/index"
+
+const dispatch = useDispatch();
+const { action1 ,action2 } = bindActionCreators(actionCreators, dispatch);
+
+() => action1(value)
+
+********* OR *********
+import { action1 ,action2 } from "the file in point 4"
 import { useDispatch } from "react-redux";
 const dispatch = useDispatch()
 dispatch(updateSlice(data))
