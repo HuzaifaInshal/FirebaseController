@@ -5,15 +5,16 @@ import addDatatoDatabase from '../firebase/addData';
 const DispComp = () => {
     const [data, setData] = useState( {    
         skills: '',
-        workExperience: [['', '', '','']],
-        education: [['', '', '', '']],
-        certifications:['']
+        workExperience: [['', '', '','','']],
+        education: [['', '', '', '','','']],
+        certifications:[['','','']]
     })
     useEffect(()=>{
         async function fetchData() {
             const resp = await fetch('https://myportfoliodb-56c35-default-rtdb.asia-southeast1.firebasedatabase.app/display.json')
             const data = await resp.json();
             setData(data.data)
+            console.log(data.data);
         }
         fetchData()
     },[]);
@@ -35,21 +36,16 @@ const DispComp = () => {
 
     function addNew(e){
         if(e.target.name == 'workExperience'){
-            setData({...data,workExperience:[...data.workExperience,['','','','']]})
+            setData({...data,workExperience:[...data.workExperience,['','','','','']]})
         }
         if(e.target.name == 'education'){
-            setData({...data,education:[...data.education,['','','','']]})
+            setData({...data,education:[...data.education,['','','','','','']]})
         }
         if(e.target.name == 'certifications'){
-            setData({...data,certifications:[...data.certifications,'']})
+            setData({...data,certifications:[...data.certifications,['','','']]})
         }
     }
 
-    function handleChange2(e,index){
-        const newarray = data.certifications;
-        newarray[index] = e.target.value;
-        setData({...data,certifications:newarray})
-    }
     return (
         <>
         <ToastContainer/>
@@ -68,6 +64,7 @@ const DispComp = () => {
                             <th>Title</th>
                             <th>Place</th>
                             <th>Special Notes</th>
+                            <th>Certificate</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -77,6 +74,7 @@ const DispComp = () => {
                                 <td><input type="text" name='workExperience' value={each[1]} onChange={(e) => { handleChange(e, index, 1) }} /></td>
                                 <td><input type="text" name='workExperience' value={each[2]} onChange={(e) => { handleChange(e, index, 2) }} /></td>
                                 <td><input type="text" name='workExperience' value={each[3]} onChange={(e) => { handleChange(e, index, 3) }} /></td>
+                                <td><input type="text" name='workExperience' value={each[4]} onChange={(e) => { handleChange(e, index, 4) }} /></td>
                             </tr>
                         ))}
                     </tbody>
@@ -93,6 +91,8 @@ const DispComp = () => {
                             <th>Degree</th>
                             <th>Institute</th>
                             <th>Result</th>
+                            <th>About</th>
+                            <th>FYP/THesis</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,6 +102,8 @@ const DispComp = () => {
                                 <td><input type="text" name='education' value={each[1]} onChange={(e) => { handleChange(e, index, 1) }} /></td>
                                 <td><input type="text" name='education' value={each[2]} onChange={(e) => { handleChange(e, index, 2) }} /></td>
                                 <td><input type="text" name='education' value={each[3]} onChange={(e) => { handleChange(e, index, 3) }} /></td>
+                                <td><input type="text" name='education' value={each[4]} onChange={(e) => { handleChange(e, index, 4) }} /></td>
+                                <td><input type="text" name='education' value={each[5]} onChange={(e) => { handleChange(e, index, 5) }} /></td>
                             </tr>
                         ))}
                     </tbody>
@@ -112,12 +114,26 @@ const DispComp = () => {
                     <h2>Certifications</h2>
                     <button type='button' className="btn btn-primary ms-3" name='certifications' onClick={(e)=>addNew(e)}>Add Education</button>
                 </div>
-                    {data.certifications.map((each,index)=>(
-                        <div>
-                            <input type="text" value={data.certifications[index]} onChange={(e)=>handleChange2(e,index)}/>
-                        </div>
-                    ))}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Link to course</th>
+                            <th>View certificate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {data.certifications ? data.certifications.map((each,index)=>(
+                        <tr key={index}>
+                            <td><input type="text" name='certifications' value={each[0]} onChange={(e) => { handleChange(e, index, 0) }} /></td>
+                            <td><input type="text" name='certifications' value={each[1]} onChange={(e) => { handleChange(e, index, 1) }} /></td>
+                            <td><input type="text" name='certifications' value={each[2]} onChange={(e) => { handleChange(e, index, 2) }} /></td>
+                        </tr>
+                    )): ''}
+                    </tbody>
+                    </table>
                     </div>
+
                 <hr />
                 <button  type='submit' className='btn btn-primary'>Submit</button>
             </form>
